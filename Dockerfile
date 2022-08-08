@@ -1,12 +1,13 @@
-# This Dockerfile creates a jupyter lab server
-FROM python:3.9-slim-buster
+# This Dockerfile creates a jupyter lab server with miniconda3
+FROM continuumio/miniconda3
 ARG TARGET_MACHINE # This variable will be used to decide the UID/GID of the internal user to match the host. Important: after the FROM!!!
 RUN TZ=Europe/Luxembourg ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get -y update
 RUN apt-get -y upgrade
-RUN apt-get -y install gnupg2 curl wget htop procps
-
-RUN apt-get install -y g++ 
+RUN apt-get -y install curl htop apt-utils
+# Install Jupyterlab as a bare minimum
+RUN conda install jupyterlab
+RUN conda install jupytext -c conda-forge
 # Create a non-root user
 # Please match this with host machine desired uid and gid
 RUN if [ "$TARGET_MACHINE" = 'ecadockerhub' ]; then echo "\n\033[0;32mBuilding for ecadockerhub\n\033[0;97m"; else echo "\n\033[0;32mBuilding for localhost\n\033[0;97m"; fi
@@ -21,3 +22,5 @@ ENV PATH=$PATH:/home/jupyter/.local/bin
 RUN openssl req -batch -x509 -nodes -days 730 -newkey rsa:2048 -keyout mykey.key -out mycert.pem -subj "/C=LU/ST=Luxembourg/O=ECALab"
 RUN mkdir Notebooks
 WORKDIR /home/jupyter/Notebooks
+# Set-up the configurations
+RUN conda config --add envs_dirs /opt/conda/envs

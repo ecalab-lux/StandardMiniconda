@@ -1,2 +1,4 @@
 Notebooks/*
 !Notebooks/readme.txt
+Condaenvs/*
+!Condaenvs/readme.txt
