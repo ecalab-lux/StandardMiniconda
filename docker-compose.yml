@@ -1,0 +1,25 @@
+version: "3" # GPU pass requires docker-compose >1.28
+# create an .env file with the following variables
+# TARGET_MACHINE=[localhost|ecadockerhub]
+# Traefik network
+networks:
+  default:
+      external:
+        name: traefik-network
+
+services:
+  standardminiconda:
+    restart: "unless-stopped"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - TARGET_MACHINE=$TARGET_MACHINE
+    image: ecalab/standardminiconda:$TARGET_MACHINE
+    container_name: standardminiconda
+    ports:
+      - 8888:8888
+    volumes:
+      - ./Notebooks:/home/jupyter/Notebooks
+    # This command enables HTTPS access only, with a self-signed certificate
+    command: ["jupyter", "lab", "--port=8888", "--no-browser", "--ip=0.0.0.0", "--ServerApp.password=", "--ServerApp.token=", "--ServerApp.base_url=standardminiconda", "--ServerApp.allow_origin_pat=.*", "--ServerApp.contents_manager_class=jupytext.TextFileContentsManager", "--ServerApp.certfile=/home/jupyter/mycert.pem", "--ServerApp.keyfile=/home/jupyter/mykey.key"]
