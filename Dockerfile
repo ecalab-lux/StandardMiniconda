@@ -25,6 +25,6 @@ WORKDIR /home/jupyter/Notebooks
 # Set-up the configurations
 RUN conda config --add envs_dirs /opt/conda/envs
 # Set up Anaconda server if image built for Ecadockerhub
-RUN if [ "$TARGET_MACHINE" = 'ecadockerhub' ]; then conda config --set channel_alias https://anaconda1.eca.eu/api/repo; fi
+RUN if [ "$TARGET_MACHINE" = 'ecadockerhub' ]; then conda config --set channel_alias https://anacondaprod1.eca.eu/api/repo; fi
 RUN if [ "$TARGET_MACHINE" = 'ecadockerhub' ]; then conda config --prepend default_channels eca_anaconda_main; fi
 RUN if [ "$TARGET_MACHINE" = 'ecadockerhub' ]; then conda config --set ssl_verify False; fi
