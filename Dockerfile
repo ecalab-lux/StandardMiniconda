@@ -6,7 +6,7 @@ RUN apt-get -y update
 RUN apt-get -y upgrade
 RUN apt-get -y install curl htop apt-utils
 # Install Jupyterlab as a bare minimum
-RUN conda install jupyterlab
+RUN conda install jupyterlab nb_conda_kernels
 RUN conda install jupytext -c conda-forge
 # Create a non-root user
 # Please match this with host machine desired uid and gid
