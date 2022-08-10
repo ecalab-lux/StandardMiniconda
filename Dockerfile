@@ -6,7 +6,7 @@ RUN apt-get -y update
 RUN apt-get -y upgrade
 RUN apt-get -y install curl htop apt-utils vim
 # Install Jupyterlab as a bare minimum
-RUN conda install jupyterlab nb_conda_kernels
+RUN conda install jupyterlab nb_conda_kernels conda-repo-cli
 RUN conda install jupytext -c conda-forge
 # Create a non-root user
 # Please match this with host machine desired uid and gid
@@ -24,7 +24,10 @@ RUN mkdir Notebooks
 WORKDIR /home/jupyter/Notebooks
 # Set-up the configurations
 RUN conda config --add envs_dirs /opt/conda/envs
+RUN conda init
 # Set up Anaconda server if image built for Ecadockerhub
 RUN if [ "$TARGET_MACHINE" = 'ecadockerhub' ]; then conda config --set channel_alias https://anacondaprod1.eca.eu/api/repo; fi
-RUN if [ "$TARGET_MACHINE" = 'ecadockerhub' ]; then conda config --prepend default_channels eca_anaconda_main; fi
-RUN if [ "$TARGET_MACHINE" = 'ecadockerhub' ]; then conda config --set ssl_verify False; fi
+RUN if [ "$TARGET_MACHINE" = 'ecadockerhub' ]; then conda config --prepend default_channels eca_anaconda_main_linux; fi
+RUN if [ "$TARGET_MACHINE" = 'ecadockerhub' ]; then conda config --set ssl_verify /home/jupyter/eca-chain.txt; fi
+COPY --chown=jupyter repo-cli-config.yaml /home/jupyter/.conda/repo-cli-config.yaml
+COPY eca-chain.txt /home/jupyter/eca-chain.txt

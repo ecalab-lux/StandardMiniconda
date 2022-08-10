@@ -1,0 +1,5 @@
+default_site: eca
+sites:
+  eca:
+    url: https://anacondaprod1.eca.eu/api
+ssl_verify: /home/jupyter/eca-chain.txt
